@@ -1,0 +1,1 @@
+Itamar's Omega calculator
