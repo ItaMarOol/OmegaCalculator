@@ -21,11 +21,11 @@ class ValidationChecker:
         if (
             not (
                 char.isdigit()
-                or ops_dict.get_priority(char) != -1
                 or char == "("
-                or char == ")"
+                or char == "+"
+                or char == "-"
+                or char == "~"
             )
-            or char == "u"
         ):
             return False
 
@@ -62,11 +62,10 @@ class ValidationChecker:
             if char == "-":
                 if i == 0:
                     if i + 1 < len(expression):
-                        next_char = expression[i + 1]
                         while i + 1 < len(expression) and expression[i+1] == "-":
                             i += 1
                         if not (
-                            next_char.isdigit() or next_char == "-" or next_char == "("
+                                expression[i + 1].isdigit() or  expression[i + 1] == "-" or  expression[i + 1] == "("
                         ):
                             return False
                     else:
