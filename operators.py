@@ -76,7 +76,7 @@ class Tilde(UnaryOperator):
 class Factorial(UnaryOperator):
     def calculate(self, operand):
         factorial_sum = 1
-        if operand.is_integer():
+        if not isinstance(operand, int) and operand.is_integer():
             operand = int(operand)
         if not isinstance(operand, int) or operand < 0:
             # raise FactorialArgumentError(operand)
