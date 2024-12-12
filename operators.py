@@ -15,6 +15,10 @@ class UnaryOperator(ABC):
         ...
 
 
+
+
+
+
 class Addition(BinaryOperator):
     def calculate(self, operand1, operand2):
         return operand1 + operand2
