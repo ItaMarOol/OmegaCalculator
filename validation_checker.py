@@ -1,4 +1,4 @@
-from operators_dicts import *
+from operators_dicts import OperatorsPriority
 
 
 class ValidationChecker:
@@ -74,6 +74,9 @@ class ValidationChecker:
 
             # tilda check
             if char == "~":
+                # before tilde a value check
+                if i > 0 and expression[i-1].isdigit():
+                    return False
                 if i + 1 < len(expression):
                     next_char = expression[i + 1]
                     if not (
