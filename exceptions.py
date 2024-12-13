@@ -10,6 +10,17 @@ class FactorialArgumentError(Exception):
         return self._argument
 
 
+class HashtagArgumentError(Exception):
+    def __init__(self, argument):
+        self._argument = argument
+
+    def __str__(self):
+        return "Hashtag Error: Hashtag on a negative value '%s' is undefined." % self._argument
+
+    def get_argument(self):
+        return self._argument
+
+
 class PowerArgumentError(Exception):
     def __init__(self, base, power):
         self._base = base
@@ -121,7 +132,7 @@ class TildeAfterInvalidError(Exception):
         self._prev_char = prev_char
 
     def __str__(self):
-        return "Tilde After Invalid Error: '~' cannot follow '%s'. It must follow a digit, '(', or '-'." % self._prev_char
+        return "Tilde After Invalid Error: '~' cannot follow '%s'. It must follow an operand, '(' or '-'." % self._prev_char
 
     def get_pprev_char(self):
         return self._prev_char
@@ -132,7 +143,7 @@ class TildeBeforeInvalidError(Exception):
         self._next_char = next_char
 
     def __str__(self):
-        return "Tilde Before Invalid Error: '~' cannot precede '%s'. It must precede a digit, '-', or '('." % self._next_char
+        return "Tilde Before Invalid Error: '~' cannot appear before '%s'. It must appear before a digit, '-', or '('." % self._next_char
 
     def get_next_char(self):
         return self._next_char
