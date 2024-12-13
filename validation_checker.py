@@ -7,8 +7,8 @@ class ValidationChecker:
 
     def is_valid_expression_check(self, infix_str_expression):
         ops_dict = OperatorsPriority()
-        left_bracket_counter = 0
-        right_bracket_counter = 0
+        left_parenthesis_counter = 0
+        right_parenthesis_counter = 0
         dot_flag = 0
         expression = infix_str_expression.replace(" ", "")
 
@@ -32,10 +32,15 @@ class ValidationChecker:
         for i in range(len(expression)):
             char = expression[i]
 
+            # invalid char check
+            if not (char.isdigit() or ops_dict.get_priority(char) != -1 or char == '(' or char == ')'):
+                return False
+
+
             if char == "(":
-                left_bracket_counter += 1
+                left_parenthesis_counter += 1
             if char == ")":
-                right_bracket_counter += 1
+                right_parenthesis_counter += 1
 
             if char == ".":
                 dot_flag = 1
@@ -70,7 +75,6 @@ class ValidationChecker:
                             return False
                     else:
                         return False
-                #elif (ops_dict.get_priority(expression[i - 1]) != -1):
 
             # tilda check
             if char == "~":
@@ -88,17 +92,16 @@ class ValidationChecker:
             if ops_dict.get_priority(char) != -1:
                 dot_flag = 0
 
-        # last char is digit
+        # last char is digit/'!'/'#'/')'
         if not (
             expression[-1].isdigit()
             or expression[-1] == "!"
-            or expression[-1] == "#"
             or expression[-1] == ")"
         ):
             return False
 
         # equal brackets check
-        if left_bracket_counter != right_bracket_counter:
+        if left_parenthesis_counter != right_parenthesis_counter:
             return False
         return True
 
