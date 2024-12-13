@@ -16,9 +16,6 @@ class UnaryOperator(ABC):
 
 
 
-
-
-
 class Addition(BinaryOperator):
     def calculate(self, operand1, operand2):
         return operand1 + operand2
@@ -40,6 +37,8 @@ class Division(BinaryOperator):
 
 class Power(BinaryOperator):
     def calculate(self, operand1, operand2):
+        if operand1 < 0 and not operand2.is_integer(): # float power on a negative value is undefined
+            return "ERROR: fraction power (" + str(operand2) + ") on a negative value (" + str(operand1) + ") is undefined"
         return pow(operand1, operand2)
 
 
