@@ -96,3 +96,16 @@ class Factorial(UnaryOperator):
             for i in range(1, operand + 1):
                 factorial_sum *= i
         return factorial_sum
+
+class Hashtag(UnaryOperator):
+    def calculate(self, operand):
+        hashtag_sum = 0
+        if not isinstance(operand, int) and operand.is_integer():
+            operand = int(operand)
+        if operand < 0:
+            raise HashtagArgumentError(operand)
+        else:
+            for digit in (str(operand)):
+                if digit != '.':
+                    hashtag_sum += int(digit)
+        return hashtag_sum

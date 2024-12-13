@@ -6,8 +6,6 @@ class MinusManager:
         pass
 
     def manage(self, infix_expression):
-        # removing white spaces
-        infix_expression = infix_expression.replace(" ", "")
 
         ops_dict = OperatorsPriority()
         output = []

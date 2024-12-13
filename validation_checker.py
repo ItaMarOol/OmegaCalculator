@@ -9,11 +9,14 @@ class ValidationChecker:
         pass
 
     def is_valid_expression_check(self, infix_str_expression):
+
         ops_dict = OperatorsPriority()
         left_parenthesis_counter = 0
         right_parenthesis_counter = 0
         dot_flag = 0
-        expression = infix_str_expression.replace(" ", "")
+
+        # removing white spaces
+        expression = infix_str_expression.replace(" ", "").replace("\t","")
 
         # empty input check
         if expression == "":
@@ -54,15 +57,16 @@ class ValidationChecker:
             if ops_dict.get_priority(char) != -1 and dot_flag == 1:
                 raise DotPlacementError(char)
 
-            # dot after operator
-            if ops_dict.get_priority(expression[i - 1]) != -1 and dot_flag == 1:
+            # dot after operator or '('
+            if (ops_dict.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(') and dot_flag == 1:
                 raise DotPlacementError(expression[i-1])
 
-            # 2 operators in a row ( except '-','!','(',')' )
+            # 2 operators in a row ( except '-','!','#','(',')' )
             if char == expression[i - 1] and not (
                 char.isdigit()
                 or char == "-"
                 or char == "!"
+                or char == "#"
                 or char == "("
                 or char == ")"
             ):
@@ -85,22 +89,23 @@ class ValidationChecker:
             if char == "~":
                 # before tilde a value check
                 if i > 0 and expression[i-1].isdigit():
-                    raise TildeBeforeInvalidError(expression[i-1])
+                    raise TildeAfterInvalidError(expression[i-1])
                 if i + 1 < len(expression):
                     next_char = expression[i + 1]
                     if not (
                         next_char.isdigit() or next_char == "-" or next_char == "("
                     ):
-                        raise TildeAfterInvalidError(next_char)
+                        raise TildeBeforeInvalidError(next_char)
                 else:
                     raise InvalidLastCharError(char)
-            if ops_dict.get_priority(char) != -1:
+            if char.isdigit():
                 dot_flag = 0
 
-        # last char is digit/'!')'
+        # last char is digit/'!'/'#'/')' check
         if not (
             expression[-1].isdigit()
             or expression[-1] == "!"
+            or expression[-1] == "#"
             or expression[-1] == ")"
         ):
             raise InvalidLastCharError(expression[-1])
