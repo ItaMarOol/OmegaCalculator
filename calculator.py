@@ -1,4 +1,3 @@
-from exceptions import *
 from postfix_converter import InfixToPostfixConverter
 from postfix_evaluator import PostfixEvaluator
 from validation_checker import ValidationChecker

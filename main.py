@@ -1,4 +1,4 @@
-from Calculator import Calculator
+from calculator import Calculator
 
 calc = Calculator()
 exp = ""
