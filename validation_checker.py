@@ -1,3 +1,6 @@
+from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
+    InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
+    InvalidLastCharError, MismatchedParenthesesError
 from operators_dicts import OperatorsPriority
 
 
@@ -14,7 +17,7 @@ class ValidationChecker:
 
         # empty input check
         if expression == "":
-            return False
+            raise EmptyExpressionError()
 
         char = expression[0]
         # invalid first char check
@@ -22,19 +25,18 @@ class ValidationChecker:
             not (
                 char.isdigit()
                 or char == "("
-                or char == "+"
                 or char == "-"
                 or char == "~"
             )
         ):
-            return False
+            raise FirstCharError(char)
 
         for i in range(len(expression)):
             char = expression[i]
 
             # invalid char check
-            if not (char.isdigit() or ops_dict.get_priority(char) != -1 or char == '(' or char == ')'):
-                return False
+            if not (char.isdigit() or ops_dict.get_priority(char) != -1 or char == '(' or char == ')' or char == '.'):
+                raise InvalidCharError(char)
 
 
             if char == "(":
@@ -46,13 +48,16 @@ class ValidationChecker:
                 dot_flag = 1
             # 2 dots in a row
             if dot_flag > 1:
-                return False
+                raise SequenceError(char,char)
+
             # dot before operator
             if ops_dict.get_priority(char) != -1 and dot_flag == 1:
-                return False
+                DotPlacementError(char)
+
             # dot after operator
             if ops_dict.get_priority(expression[i - 1]) != -1 and dot_flag == 1:
-                return False
+                DotPlacementError(char)
+
             # 2 operators in a row ( except '-','!','(',')' )
             if char == expression[i - 1] and not (
                 char.isdigit()
@@ -61,7 +66,7 @@ class ValidationChecker:
                 or char == "("
                 or char == ")"
             ):
-                return False
+                raise SequenceError(char,char)
 
             # minus check
             if char == "-":
@@ -72,37 +77,37 @@ class ValidationChecker:
                         if not (
                                 expression[i + 1].isdigit() or  expression[i + 1] == "-" or  expression[i + 1] == "("
                         ):
-                            return False
+                            raise InvalidUnaryMinusError(expression[i+1])
                     else:
-                        return False
+                        raise InvalidSingleCharError(char)
 
             # tilda check
             if char == "~":
                 # before tilde a value check
                 if i > 0 and expression[i-1].isdigit():
-                    return False
+                    raise TildeBeforeInvalidError(expression[i-1])
                 if i + 1 < len(expression):
                     next_char = expression[i + 1]
                     if not (
                         next_char.isdigit() or next_char == "-" or next_char == "("
                     ):
-                        return False
+                        raise TildeAfterInvalidError(next_char)
                 else:
-                    return False
+                    raise InvalidLastCharError(char)
             if ops_dict.get_priority(char) != -1:
                 dot_flag = 0
 
-        # last char is digit/'!'/'#'/')'
+        # last char is digit/'!')'
         if not (
             expression[-1].isdigit()
             or expression[-1] == "!"
             or expression[-1] == ")"
         ):
-            return False
+            raise InvalidLastCharError(expression[-1])
 
         # equal brackets check
         if left_parenthesis_counter != right_parenthesis_counter:
-            return False
+            raise MismatchedParenthesesError(left_parenthesis_counter, right_parenthesis_counter)
         return True
 
 
