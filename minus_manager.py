@@ -6,12 +6,15 @@ class MinusManager:
         pass
 
     def manage(self, infix_expression):
-
         ops_dict = OperatorsPriority()
         output = []
         i = 0
         starting_minus_counter = 0
         minus_counter = 0
+
+        # removing white spaces
+        infix_expression = infix_expression.replace(" ", "").replace("\t","")
+
         # first unary minuses check
         if len(infix_expression) > 1 and infix_expression[0] == "-":
             while i < len(infix_expression) and infix_expression[i] == "-":
