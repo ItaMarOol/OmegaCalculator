@@ -110,7 +110,7 @@ class InvalidUnaryMinusError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Unary Minus Error: Unary minus cannot be applied to '%s'. It must be before a digit, '(', or '-'." % self._invalid_char
+        return "Invalid Unary Minus Error: Unary minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'." % self._invalid_char
 
     def get_invalid_char(self):
         return self._invalid_char

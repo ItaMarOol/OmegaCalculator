@@ -52,11 +52,11 @@ class ValidationChecker:
 
             # dot before operator
             if ops_dict.get_priority(char) != -1 and dot_flag == 1:
-                DotPlacementError(char)
+                raise DotPlacementError(char)
 
             # dot after operator
             if ops_dict.get_priority(expression[i - 1]) != -1 and dot_flag == 1:
-                DotPlacementError(char)
+                raise DotPlacementError(expression[i-1])
 
             # 2 operators in a row ( except '-','!','(',')' )
             if char == expression[i - 1] and not (
