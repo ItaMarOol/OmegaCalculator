@@ -85,7 +85,7 @@ class SequenceError(Exception):
 
     def __str__(self):
         return ("Sequence Error: The sequence '%s' '%s' is not valid. "
-                "Operators, parentheses, and dots cannot appear in a sequence, except for: '!', '-', '(', or ')'." % (self._first_char, self._second_char))
+                "Operators and dots cannot appear in a sequence, except for: '-', '!', or '#'." % (self._first_char, self._second_char))
 
     def get_first_char(self):
         return self._first_char
@@ -100,6 +100,17 @@ class DotPlacementError(Exception):
 
     def __str__(self):
         return "Dot Placement Error: A dot cannot appear before or after '%s'. It should only appear before or after a value." % self._invalid_char
+
+    def get_invalid_char(self):
+        return self._invalid_char
+
+
+class SurroundingDotsError(Exception):
+    def __init__(self, invalid_char):
+        self._invalid_char = invalid_char
+
+    def __str__(self):
+        return "Surrounding Dots Error: A value '%s' cannot be surrounded by two dots. Dots should only appear before or after a value." % self._invalid_char
 
     def get_invalid_char(self):
         return self._invalid_char
