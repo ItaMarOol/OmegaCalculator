@@ -1,6 +1,6 @@
 from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
     InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
-    InvalidLastCharError, MismatchedParenthesesError
+    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
@@ -58,9 +58,14 @@ class ValidationChecker:
             if ops_priorities.get_priority(char) != -1 and dot_flag == 1:
                 raise DotPlacementError(char)
 
-            # dot after operator or '('
-            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(') and dot_flag == 1:
+            # dot after operator or '(' or ')'
+            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(' or expression[i-1] == ')') and dot_flag == 1:
                 raise DotPlacementError(expression[i-1])
+
+            # dot before and after a digit
+            if i + 1 < len(expression) :
+                if char.isdigit() and dot_flag == 1 and expression[i+1] == '.':
+                    raise SurroundingDotsError(char)
 
             # 2 operators in a row ( except '-','!','#','(',')' )
             if char == expression[i - 1] and not (
