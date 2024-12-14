@@ -1,5 +1,5 @@
 from minus_manager import MinusManager
-from operators_dicts import OperatorsPriority
+from operators_dicts import OperatorsPriorities
 
 
 class InfixToPostfixConverter:
@@ -9,7 +9,7 @@ class InfixToPostfixConverter:
     def to_postfix(self, str_expression):
         postfix_output = []
         stack = []
-        ops_dict = OperatorsPriority()
+        ops_dict = OperatorsPriorities()
         minus_manager = MinusManager()
         expression = minus_manager.manage(str_expression)
 

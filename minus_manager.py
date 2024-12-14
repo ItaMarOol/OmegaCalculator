@@ -6,7 +6,8 @@ class MinusManager:
         pass
 
     def manage(self, infix_expression):
-        ops_dict = OperatorsPriority()
+        ops_priorities = OperatorsPriorities()
+        ops_placements = OperatorsPlacements()
         output = []
         i = 0
         starting_minus_counter = 0
@@ -32,7 +33,7 @@ class MinusManager:
                     output.append(infix_expression[i])
                 else:
                     # after minuses sequence is operator check
-                    if ops_dict.get_priority(infix_expression[i]) != -1:
+                    if ops_priorities.get_priority(infix_expression[i]) != -1:
                         output.pop()  # popping inserted minus
                         output.append("+")
                         output.append(infix_expression[i])
@@ -46,8 +47,8 @@ class MinusManager:
                 i > 0
                 and infix_expression[i] == "-"
                 and (
-                    ops_dict.get_priority(infix_expression[i - 1]) != -1
-                    and infix_expression[i - 1] != "!"
+                    ops_priorities.get_priority(infix_expression[i - 1]) != -1
+                    and ops_placements.get_placement(infix_expression[-1]) == "Right"
                     or infix_expression[i - 1] == "("
                 )
             ):

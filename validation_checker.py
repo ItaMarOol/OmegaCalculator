@@ -1,7 +1,7 @@
 from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
     InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
     InvalidLastCharError, MismatchedParenthesesError
-from operators_dicts import OperatorsPriority
+from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
 class ValidationChecker:
@@ -10,7 +10,8 @@ class ValidationChecker:
 
     def is_valid_expression_check(self, infix_str_expression):
 
-        ops_dict = OperatorsPriority()
+        ops_priorities = OperatorsPriorities()
+        ops_placements = OperatorsPlacements()
         left_parenthesis_counter = 0
         right_parenthesis_counter = 0
         dot_flag = 0
@@ -38,7 +39,7 @@ class ValidationChecker:
             char = expression[i]
 
             # invalid char check
-            if not (char.isdigit() or ops_dict.get_priority(char) != -1 or char == '(' or char == ')' or char == '.'):
+            if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == '(' or char == ')' or char == '.'):
                 raise InvalidCharError(char)
 
 
@@ -54,21 +55,20 @@ class ValidationChecker:
                 raise SequenceError(char,char)
 
             # dot before operator
-            if ops_dict.get_priority(char) != -1 and dot_flag == 1:
+            if ops_priorities.get_priority(char) != -1 and dot_flag == 1:
                 raise DotPlacementError(char)
 
             # dot after operator or '('
-            if (ops_dict.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(') and dot_flag == 1:
+            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(') and dot_flag == 1:
                 raise DotPlacementError(expression[i-1])
 
             # 2 operators in a row ( except '-','!','#','(',')' )
             if char == expression[i - 1] and not (
                 char.isdigit()
                 or char == "-"
-                or char == "!"
-                or char == "#"
                 or char == "("
                 or char == ")"
+                or ops_placements.get_placement(char) == "Right"
             ):
                 raise SequenceError(char,char)
 
@@ -104,9 +104,8 @@ class ValidationChecker:
         # last char is digit/'!'/'#'/')' check
         if not (
             expression[-1].isdigit()
-            or expression[-1] == "!"
-            or expression[-1] == "#"
             or expression[-1] == ")"
+            or ops_placements.get_placement(expression[-1]) == "Right"
         ):
             raise InvalidLastCharError(expression[-1])
 
