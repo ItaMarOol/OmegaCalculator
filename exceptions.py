@@ -4,7 +4,7 @@ class FactorialArgumentError(Exception):
         self._argument = argument
 
     def __str__(self):
-        return "Factorial Error: Factorial on a non-positive integer '%s' is undefined." % self._argument
+        return "Factorial Error: Factorial on a non positive-integer '%s' is undefined." % self._argument
 
     def get_argument(self):
         return self._argument
