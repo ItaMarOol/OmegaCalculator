@@ -106,6 +106,6 @@ class Hashtag(UnaryOperator):
             raise HashtagArgumentError(operand)
         else:
             for digit in (str(operand)):
-                if digit != '.':
+                if digit != ".":
                     hashtag_sum += int(digit)
         return hashtag_sum

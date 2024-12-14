@@ -39,7 +39,7 @@ class ValidationChecker:
             char = expression[i]
 
             # invalid char check
-            if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == '(' or char == ')' or char == '.'):
+            if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == "(" or char == ")" or char == "."):
                 raise InvalidCharError(char)
 
 
@@ -59,12 +59,12 @@ class ValidationChecker:
                 raise DotPlacementError(char)
 
             # dot after operator or '(' or ')'
-            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == '(' or expression[i-1] == ')') and dot_flag == 1:
+            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == "(" or expression[i-1] == ")") and dot_flag == 1:
                 raise DotPlacementError(expression[i-1])
 
             # dot before and after a digit
             if i + 1 < len(expression) :
-                if char.isdigit() and dot_flag == 1 and expression[i+1] == '.':
+                if char.isdigit() and dot_flag == 1 and expression[i+1] == ".":
                     raise SurroundingDotsError(char)
 
             # 2 operators in a row ( except '-','!','#','(',')' )
