@@ -1,5 +1,5 @@
 from minus_manager import MinusManager
-from operators_dicts import OperatorsPriorities
+from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
 class InfixToPostfixConverter:
@@ -9,7 +9,8 @@ class InfixToPostfixConverter:
     def to_postfix(self, str_expression):
         postfix_output = []
         stack = []
-        ops_dict = OperatorsPriorities()
+        ops_priorities = OperatorsPriorities()
+        ops_placements = OperatorsPlacements()
         minus_manager = MinusManager()
         expression = minus_manager.manage(str_expression)
 
@@ -34,11 +35,14 @@ class InfixToPostfixConverter:
 
             else:
                 while (stack and stack[-1] != '(' and
-                       (ops_dict.get_priority(stack[-1]) > ops_dict.get_priority(char) or (ops_dict.get_priority(stack[-1]) == ops_dict.get_priority(char))
+                       (ops_priorities.get_priority(stack[-1]) > ops_priorities.get_priority(char) or (ops_priorities.get_priority(stack[-1]) == ops_priorities.get_priority(char))
                                )):
                     postfix_output.append(stack.pop())
                 else:
-                    stack.append(char)
+                    if ops_placements.get_placement(char) == "Right":
+                        postfix_output.append(char)
+                    else:
+                        stack.append(char)
 
             i += 1
 
