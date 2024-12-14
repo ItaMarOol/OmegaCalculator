@@ -18,23 +18,23 @@ class InfixToPostfixConverter:
         while i < len(expression):
             char = expression[i]
 
-            if char.isdigit() or char.lstrip('-').isdigit() or char == '.':
+            if char.isdigit() or char.lstrip("-").isdigit() or char == ".":
                 number = char
                 while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
                     i += 1
                     number += expression[i]
                 postfix_output.append(number)
 
-            elif char == '(':
+            elif char == "(":
                 stack.append(char)
 
-            elif char == ')':
-                while stack and stack[-1] != '(':
+            elif char == ")":
+                while stack and stack[-1] != "(":
                     postfix_output.append(stack.pop())
                 stack.pop()
 
             else:
-                while (stack and stack[-1] != '(' and
+                while (stack and stack[-1] != "(" and
                        (ops_priorities.get_priority(stack[-1]) > ops_priorities.get_priority(char) or (ops_priorities.get_priority(stack[-1]) == ops_priorities.get_priority(char))
                                )):
                     postfix_output.append(stack.pop())
