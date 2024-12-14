@@ -68,12 +68,12 @@ class ValidationChecker:
                     raise SurroundingDotsError(char)
 
             # 2 operators in a row ( except '-','!','#','(',')' )
-            if char == expression[i - 1] and not (
+            if i > 0 and char == expression[i - 1] and not (
                 char.isdigit()
                 or char == "-"
+                or ops_placements.get_placement(char) == "Right"
                 or char == "("
                 or char == ")"
-                or ops_placements.get_placement(char) == "Right"
             ):
                 raise SequenceError(char,char)
 
@@ -109,8 +109,8 @@ class ValidationChecker:
         # last char is digit/'!'/'#'/')' check
         if not (
             expression[-1].isdigit()
-            or expression[-1] == ")"
             or ops_placements.get_placement(expression[-1]) == "Right"
+            or expression[-1] == ")"
         ):
             raise InvalidLastCharError(expression[-1])
 
