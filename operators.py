@@ -109,3 +109,7 @@ class Hashtag(UnaryOperator):
                 if digit != ".":
                     hashtag_sum += int(digit)
         return hashtag_sum
+
+class SignMinus(UnaryOperator):
+    def calculate(self, operand):
+        return -1 * operand
