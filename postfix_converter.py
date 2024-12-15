@@ -14,15 +14,15 @@ class InfixToPostfixConverter:
         minus_manager = MinusManager()
         expression = minus_manager.manage(str_expression)
 
-        i = 0
-        while i < len(expression):
-            char = expression[i]
+        index = 0
+        while index < len(expression):
+            char = expression[index]
 
             if char.isdigit() or char.lstrip("-").isdigit() or char == ".":
                 number = char
-                while i + 1 < len(expression) and (expression[i + 1].isdigit() or expression[i + 1] == '.'):
-                    i += 1
-                    number += expression[i]
+                while index + 1 < len(expression) and (expression[index + 1].isdigit() or expression[index + 1] == '.'):
+                    index += 1
+                    number += expression[index]
                 postfix_output.append(number)
 
             elif char == "(":
@@ -44,7 +44,7 @@ class InfixToPostfixConverter:
                     else:
                         stack.append(char)
 
-            i += 1
+            index += 1
 
         while stack:
             postfix_output.append(stack.pop())
