@@ -20,7 +20,7 @@ class MinusManager:
                     i += 1
                     # sign minus check
                     while i < len(infix_expression) and infix_expression[i] == "-":
-                        output.append("s")
+                        output.append("u")
                         i += 1
             # binary minus check
             elif infix_expression[i] == "-" and i > 0 and (infix_expression[i-1].isdigit() or infix_expression[i-1] == ")"):
