@@ -35,7 +35,7 @@ class InfixToPostfixConverter:
 
             else:
                 while (stack and stack[-1] != "(" and
-                       (ops_priorities.get_priority(stack[-1]) > ops_priorities.get_priority(char) or (ops_priorities.get_priority(stack[-1]) == ops_priorities.get_priority(char) and char != "s")
+                       (ops_priorities.get_priority(stack[-1]) > ops_priorities.get_priority(char) or (ops_priorities.get_priority(stack[-1]) == ops_priorities.get_priority(char) and char != "s" and char != "u")
                                )):
                     postfix_output.append(stack.pop())
                 else:
