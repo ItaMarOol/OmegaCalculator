@@ -42,13 +42,13 @@ class MinusManager:
                             "-" + infix_expression[i]
                         )
                 i += 1
-            # minus after operator (except '!', '(' )
+            # minus after operator (except '!', '#', '(' )
             elif (
                 i > 0
                 and infix_expression[i] == "-"
                 and (
                     ops_priorities.get_priority(infix_expression[i - 1]) != -1
-                    and ops_placements.get_placement(infix_expression[-1]) == "Right"
+                    and ops_placements.get_placement(infix_expression[-1]) != "Right"
                     or infix_expression[i - 1] == "("
                 )
             ):
