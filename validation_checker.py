@@ -31,6 +31,7 @@ class ValidationChecker:
                 or char == "("
                 or char == "-"
                 or char == "~"
+                or char == "."
             )
         ):
             raise FirstCharError(char)
@@ -58,8 +59,8 @@ class ValidationChecker:
             if ops_priorities.get_priority(char) != -1 and dot_flag == 1:
                 raise DotPlacementError(char)
 
-            # dot after operator or '(' or ')'
-            if (ops_priorities.get_priority(expression[index - 1]) != -1 or expression[index-1] == "(" or expression[index-1] == ")") and dot_flag == 1:
+            # dot after ')'
+            if expression[index-1] == ")" and dot_flag == 1:
                 raise DotPlacementError(expression[index-1])
 
             # dot before and after a digit

@@ -99,7 +99,7 @@ class DotPlacementError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Dot Placement Error: A dot cannot appear before or after '%s'. It should only appear before or after a value." % self._invalid_char
+        return "Dot Placement Error: A dot cannot appear before or after '%s'. It should only appear before a value or after a value/operator or '(' ." % self._invalid_char
 
     def get_invalid_char(self):
         return self._invalid_char
