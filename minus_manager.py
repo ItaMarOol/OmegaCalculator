@@ -7,69 +7,36 @@ class MinusManager:
 
     def manage(self, infix_expression):
         ops_priorities = OperatorsPriorities()
-        ops_placements = OperatorsPlacements()
         output = []
         i = 0
-        starting_minus_counter = 0
-        minus_counter = 0
 
         # removing white spaces
         infix_expression = infix_expression.replace(" ", "").replace("\t","")
 
-        # first unary minuses check
-        if len(infix_expression) > 1 and infix_expression[0] == "-":
-            while i < len(infix_expression) and infix_expression[i] == "-":
-                starting_minus_counter += 1
-                i += 1
-            if starting_minus_counter % 2 == 1:
-                output.append("u")
         while i < len(infix_expression):
-            # minuses sequence check
-            if i > 0 and infix_expression[i] == "-" and infix_expression[i - 1] == "-":
-                while infix_expression[i] == "-":
-                    minus_counter += 1
+            # unary minus check
+            if infix_expression[i] == "-" and (i == 0 or infix_expression[i - 1] == "("):
+                    output.append("u")
                     i += 1
-                if minus_counter % 2 == 0:
-                    output.append(infix_expression[i])
-                else:
-                    # after minuses sequence is operator check
-                    if ops_priorities.get_priority(infix_expression[i]) != -1:
-                        output.pop()  # popping inserted minus
-                        output.append("+")
-                        output.append(infix_expression[i])
-                    else: # minus sign attached to a value
-                        output.append(
-                            "-" + infix_expression[i]
-                        )
-                i += 1
-            # minus after operator (except '!', '#', '(' )
-            elif (
-                i > 0
-                and infix_expression[i] == "-"
-                and (
-                    ops_priorities.get_priority(infix_expression[i - 1]) != -1
-                    and ops_placements.get_placement(infix_expression[-1]) != "Right"
-                    or infix_expression[i - 1] == "("
-                )
-            ):
-                while infix_expression[i] == "-":
-                    minus_counter += 1
+                    # sign minus check
+                    while i < len(infix_expression) and infix_expression[i] == "-":
+                        output.append("s")
+                        i += 1
+            # binary minus check
+            elif infix_expression[i] == "-" and i > 0 and (infix_expression[i-1].isdigit() or infix_expression[i-1] == ")"):
+                    output.append("-")
                     i += 1
-                if minus_counter % 2 == 0:
-                    temp = ""
-                    while i < len(infix_expression) and infix_expression[i].isdigit():
-                        temp += infix_expression[i]
+                    # sign minus check
+                    while i < len(infix_expression) and infix_expression[i] == "-":
+                        output.append("s")
                         i += 1
-                    output.append(temp)
-                else:
-                    temp = "-"
-                    while i < len(infix_expression) and infix_expression[i].isdigit():
-                        temp += infix_expression[i]
-                        i += 1
-                    output.append(temp)
+            # sign minus check
+            elif infix_expression[i] == "-" and i > 0 and ops_priorities.get_priority(infix_expression[i-1] != -1):
+                while i < len(infix_expression) and infix_expression[i] == "-":
+                    output.append("s")
+                    i+=1
             else:
                 output.append(infix_expression[i])
                 i += 1
-            minus_counter = 0
         return output
 
