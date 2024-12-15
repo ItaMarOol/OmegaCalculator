@@ -35,8 +35,8 @@ class ValidationChecker:
         ):
             raise FirstCharError(char)
 
-        for i in range(len(expression)):
-            char = expression[i]
+        for index in range(len(expression)):
+            char = expression[index]
 
             # invalid char check
             if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == "(" or char == ")" or char == "."):
@@ -59,16 +59,16 @@ class ValidationChecker:
                 raise DotPlacementError(char)
 
             # dot after operator or '(' or ')'
-            if (ops_priorities.get_priority(expression[i - 1]) != -1 or expression[i-1] == "(" or expression[i-1] == ")") and dot_flag == 1:
-                raise DotPlacementError(expression[i-1])
+            if (ops_priorities.get_priority(expression[index - 1]) != -1 or expression[index-1] == "(" or expression[index-1] == ")") and dot_flag == 1:
+                raise DotPlacementError(expression[index-1])
 
             # dot before and after a digit
-            if i + 1 < len(expression) :
-                if char.isdigit() and dot_flag == 1 and expression[i+1] == ".":
+            if index + 1 < len(expression) :
+                if char.isdigit() and dot_flag == 1 and expression[index+1] == ".":
                     raise SurroundingDotsError(char)
 
             # 2 operators in a row ( except '-','!','#','(',')' )
-            if i > 0 and char == expression[i - 1] and not (
+            if index > 0 and char == expression[index - 1] and not (
                 char.isdigit()
                 or char == "-"
                 or ops_placements.get_placement(char) == "Right"
@@ -79,24 +79,24 @@ class ValidationChecker:
 
             # minus check
             if char == "-":
-                if i == 0:
-                    if i + 1 < len(expression):
-                        while i + 1 < len(expression) and expression[i+1] == "-":
-                            i += 1
+                if index == 0:
+                    if index + 1 < len(expression):
+                        while index + 1 < len(expression) and expression[index+1] == "-":
+                            index += 1
                         if not (
-                                expression[i + 1].isdigit() or  expression[i + 1] == "-" or  expression[i + 1] == "("
+                                expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "("
                         ):
-                            raise InvalidUnaryMinusError(expression[i+1])
+                            raise InvalidUnaryMinusError(expression[index+1])
                     else:
                         raise InvalidSingleCharError(char)
 
             # tilda check
             if char == "~":
                 # before tilde a value check
-                if i > 0 and expression[i-1].isdigit():
-                    raise TildeAfterInvalidError(expression[i-1])
-                if i + 1 < len(expression):
-                    next_char = expression[i + 1]
+                if index > 0 and expression[index-1].isdigit():
+                    raise TildeAfterInvalidError(expression[index-1])
+                if index + 1 < len(expression):
+                    next_char = expression[index + 1]
                     if not (
                         next_char.isdigit() or next_char == "-" or next_char == "("
                     ):
