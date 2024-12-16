@@ -21,13 +21,13 @@ class HashtagArgumentError(Exception):
         return self._argument
 
 
-class PowerArgumentError(Exception):
+class FractionPowerArgumentError(Exception):
     def __init__(self, base, power):
         self._base = base
         self._power = power
 
     def __str__(self):
-        return "Power Error: Fraction power '%s' on a negative base '%s' is undefined." % (self._power, self._base)
+        return "Fraction Power Error: Fraction power '%s' on a negative base '%s' is undefined." % (self._power, self._base)
 
     def get_base(self):
         return self._base
@@ -35,25 +35,32 @@ class PowerArgumentError(Exception):
     def get_power(self):
         return self._power
 
+class ZeroPowerZeroError(Exception):
+    def __init__(self):
+        pass
 
-class TooManyOperatorsError(Exception):
+    def __str__(self):
+        return "Zero Power Error: Zero power '0' on a zero base '0' is undefined."
+
+
+
+class MissingOperandError(Exception):
     def __init__(self, operator):
         self._operator = operator
 
     def __str__(self):
-        return "Too Many Operators Error: You need two numbers to operate '%s'." % self._operator
+        return "Missing Operand Error: You need two numbers to operate '%s'." % self._operator
 
     def get_operator(self):
         return self._operator
 
 
-class NotEnoughOperatorsError(Exception):
+class MissingOperatorError(Exception):
     def __init__(self):
         pass
 
     def __str__(self):
-        return "Not Enough Operators Error: There are not enough operators between the expression values."
-
+        return "Missing Operator Error: There are missing operators between the expression values."
 
 
 
@@ -85,7 +92,7 @@ class SequenceError(Exception):
 
     def __str__(self):
         return ("Sequence Error: The sequence '%s' '%s' is not valid. "
-                "Operators and dots cannot appear in a sequence, except for: '-', '!', or '#'." % (self._first_char, self._second_char))
+                "Operators and dots cannot appear in a sequence, except for: parentheses, minuses and right unary operators" % (self._first_char, self._second_char))
 
     def get_first_char(self):
         return self._first_char
@@ -174,7 +181,7 @@ class TildeBeforeInvalidError(Exception):
         self._next_char = next_char
 
     def __str__(self):
-        return "Tilde Before Invalid Error: '~' cannot appear before '%s'. It must appear before a digit, '-', or '('." % self._next_char
+        return "Tilde Before Invalid Error: '~' cannot appear before a value with '%s'. It must appear before a digit, '-', or '('." % self._next_char
 
     def get_next_char(self):
         return self._next_char
@@ -216,3 +223,25 @@ class MismatchedParenthesesError(Exception):
     def get_close_parentheses_count(self):
         return self._close_parentheses
 
+
+class InvalidCharAfterParenthesisError(Exception):
+    def __init__(self, invalid_char):
+        self._invalid_char = invalid_char
+
+    def __str__(self):
+        return "Invalid Char After Parenthesis Error: '%s' cannot follow '('. Only digits, '(' , `~` or '-' can follow '(' ." % self._invalid_char
+
+    def get_invalid_char(self):
+        return self._invalid_char
+
+
+class InvalidCharBeforeRightOperatorError(Exception):
+    def __init__(self, invalid_char, right_operator):
+        self._invalid_char = invalid_char
+        self._right_operator = right_operator
+
+    def __str__(self):
+        return "Invalid Char Before Right Operator Error: '%s' cannot appear before '%s'. Only digits, '-' , or right unary operators can appear before right unary operators ." % (self._invalid_char, self._right_operator)
+
+    def get_invalid_char(self):
+        return self._invalid_char

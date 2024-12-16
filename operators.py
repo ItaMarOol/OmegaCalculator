@@ -44,8 +44,10 @@ class Division(BinaryOperator):
 
 class Power(BinaryOperator):
     def calculate(self, operand1, operand2):
+        if operand1 == operand2 == 0:
+            raise ZeroPowerZeroError()
         if operand1 < 0 and not isinstance(operand2, int) and not operand2.is_integer(): # float power on a negative value is undefined
-            raise PowerArgumentError(operand1, operand2)
+            raise FractionPowerArgumentError(operand1, operand2)
         return pow(operand1, operand2)
 
 

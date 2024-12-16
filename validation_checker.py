@@ -1,6 +1,7 @@
 from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
     InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
-    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError, InvalidSignMinusError, InvalidMinusError
+    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError, InvalidSignMinusError, InvalidMinusError, \
+    InvalidCharAfterParenthesisError, InvalidCharBeforeRightOperatorError
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
@@ -82,18 +83,21 @@ class ValidationChecker:
             while index + 1 < len(expression) and char.isdigit() and dot_flag == 1 :
                 if expression[index+1] == ".":
                     raise SurroundingDotsError(num)
+                elif ops_priorities.get_priority(expression[index+1]) != -1:
+                    dot_flag = 0
                 else:
                     index += 1
                     num += expression[index]
+
             # 2 operators in a row ( except '-','!','#','(',')' )
-            if index > 0 and char == expression[index - 1] and not (
+            if index > 0 and ops_placements.get_placement(char) == ops_placements.get_placement(expression[index-1]) and not (
                 char.isdigit()
                 or char == "-"
                 or ops_placements.get_placement(char) == "Right"
                 or char == "("
                 or char == ")"
             ):
-                raise SequenceError(char,char)
+                raise SequenceError(expression[index-1],char)
 
             # minus check
             if char == "-":
@@ -135,7 +139,11 @@ class ValidationChecker:
                     raise InvalidLastCharError(char)
             if char.isdigit():
                 dot_flag = 0
-
+            if index > 0 and expression[index-1] == "(" and not(char.isdigit() or char == "-" or char == "." or ops_placements.get_placement(char) == "Left"):
+                raise InvalidCharAfterParenthesisError(char)
+            if index > 0 and ops_placements.get_placement(char) == "Right":
+                if not (expression[index-1].isdigit() or expression[index-1] == ")" or ops_placements.get_placement(expression[index-1]) == "Right" or expression[index-1] == "-"):
+                    raise InvalidCharBeforeRightOperatorError(expression[index-1], char)
         # equal brackets check
         if left_parenthesis_counter != right_parenthesis_counter:
             raise MismatchedParenthesesError(left_parenthesis_counter, right_parenthesis_counter)
