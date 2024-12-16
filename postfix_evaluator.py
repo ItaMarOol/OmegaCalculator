@@ -1,5 +1,6 @@
-from exceptions import TooManyOperatorsError, NotEnoughOperatorsError
-from operators_dicts import *
+from exceptions import MissingOperatorError, MissingOperandError
+from operators import BinaryOperator, UnaryOperator
+from operators_dicts import OperatorsClasses
 
 
 class PostfixEvaluator:
@@ -25,7 +26,7 @@ class PostfixEvaluator:
                 if op_class != -1:
                     if issubclass(op_class, BinaryOperator):
                         if len(stack) < 2:
-                            raise TooManyOperatorsError(char)
+                            raise MissingOperandError(char)
                         else:
                             operand2 = stack.pop()
                             operand1 = stack.pop()
@@ -34,9 +35,9 @@ class PostfixEvaluator:
                     elif issubclass(op_class, UnaryOperator):
                         if len(stack) < 1:
                             if char == "u" or char == "s":
-                                raise TooManyOperatorsError("-")
+                                raise MissingOperandError("-")
                             else:
-                                raise TooManyOperatorsError(char)
+                                raise MissingOperandError(char)
                         else:
                             operand = stack.pop()
                             result = op_class.calculate(op_class, operand)
@@ -44,7 +45,7 @@ class PostfixEvaluator:
 
             i += 1
         if len(stack) > 1:
-            raise NotEnoughOperatorsError()
+            raise MissingOperatorError()
         return stack[-1]
 
 

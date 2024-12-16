@@ -7,6 +7,7 @@ class MinusManager:
 
     def manage(self, infix_expression : str) -> list :
         ops_priorities = OperatorsPriorities()
+        ops_placements = OperatorsPlacements()
         output = []
         index = 0
 
@@ -22,7 +23,7 @@ class MinusManager:
                         index += 1
             # binary minus check
             elif (infix_expression[index] == "-" and index > 0 and
-                  (infix_expression[index-1].isdigit() or infix_expression[index-1] == ")")):
+                  (infix_expression[index-1].isdigit() or ops_placements.get_placement(infix_expression[index-1]) == "Right" or infix_expression[index-1] == ")")):
                     output.append("-")
                     index += 1
                     # sign minus check
