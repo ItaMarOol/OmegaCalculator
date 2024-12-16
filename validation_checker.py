@@ -1,6 +1,6 @@
 from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
     InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
-    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError
+    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError, InvalidSignMinusError, InvalidMinusError
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
@@ -8,12 +8,15 @@ class ValidationChecker:
     def __init__(self):
         pass
 
-    def is_valid_expression_check(self, infix_str_expression):
+    def is_valid_expression_check(self, infix_str_expression : str):
 
         ops_priorities = OperatorsPriorities()
         ops_placements = OperatorsPlacements()
         left_parenthesis_counter = 0
         right_parenthesis_counter = 0
+        sign_minus_flag = 0
+        unary_minus_flag = 0
+        minus_flag = 0
         dot_flag = 0
 
         # removing white spaces
@@ -36,8 +39,19 @@ class ValidationChecker:
         ):
             raise FirstCharError(char)
 
+        # Invalid last char check
+        if not (
+            expression[-1].isdigit()
+            or ops_placements.get_placement(expression[-1]) == "Right"
+            or expression[-1] == ")"
+        ):
+            raise InvalidLastCharError(expression[-1])
+
         for index in range(len(expression)):
             char = expression[index]
+            sign_minus_flag = 0
+            unary_minus_flag = 0
+            minus_flag = 0
 
             # invalid char check
             if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == "(" or char == ")" or char == "."):
@@ -64,10 +78,13 @@ class ValidationChecker:
                 raise DotPlacementError(expression[index-1])
 
             # dot before and after a digit
-            if index + 1 < len(expression) :
-                if char.isdigit() and dot_flag == 1 and expression[index+1] == ".":
-                    raise SurroundingDotsError(char)
-
+            num = char
+            while index + 1 < len(expression) and char.isdigit() and dot_flag == 1 :
+                if expression[index+1] == ".":
+                    raise SurroundingDotsError(num)
+                else:
+                    index += 1
+                    num += expression[index]
             # 2 operators in a row ( except '-','!','#','(',')' )
             if index > 0 and char == expression[index - 1] and not (
                 char.isdigit()
@@ -80,16 +97,28 @@ class ValidationChecker:
 
             # minus check
             if char == "-":
-                if index == 0:
-                    if index + 1 < len(expression):
-                        while index + 1 < len(expression) and expression[index+1] == "-":
-                            index += 1
-                        if not (
-                                expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "("
-                        ):
+                if index == 0 or expression[index-1] == "(":
+                    unary_minus_flag = 1
+                elif expression[index-1].isdigit() or expression[index-1] == ")":
+                    minus_flag = 1
+                elif ops_priorities.get_priority(expression[index-1]) != -1:
+                    sign_minus_flag = 1
+
+                if index + 1 < len(expression):
+                    while index + 1 < len(expression) and expression[index+1] == "-":
+                        index += 1
+                        sign_minus_flag = 1
+                    if not (
+                            expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "("
+                    ):
+                        if sign_minus_flag == 1:
+                            raise InvalidSignMinusError(expression[index+1])
+                        elif unary_minus_flag == 1:
                             raise InvalidUnaryMinusError(expression[index+1])
-                    else:
-                        raise InvalidSingleCharError(char)
+                        else:
+                            raise InvalidMinusError(expression[index+1])
+                else:
+                    raise InvalidSingleCharError(char)
 
             # tilda check
             if char == "~":
@@ -97,23 +126,15 @@ class ValidationChecker:
                 if index > 0 and expression[index-1].isdigit():
                     raise TildeAfterInvalidError(expression[index-1])
                 if index + 1 < len(expression):
-                    next_char = expression[index + 1]
-                    if not (
-                        next_char.isdigit() or next_char == "-" or next_char == "("
-                    ):
-                        raise TildeBeforeInvalidError(next_char)
+                    index += 1
+                    while index < len(expression) and not (expression[index].isdigit() or expression[index] == "("):
+                        if ops_priorities.get_priority(expression[index]) != -1 and expression[index] != "-":
+                            raise TildeBeforeInvalidError(expression[index])
+                        index += 1
                 else:
                     raise InvalidLastCharError(char)
             if char.isdigit():
                 dot_flag = 0
-
-        # last char is digit/'!'/'#'/')' check
-        if not (
-            expression[-1].isdigit()
-            or ops_placements.get_placement(expression[-1]) == "Right"
-            or expression[-1] == ")"
-        ):
-            raise InvalidLastCharError(expression[-1])
 
         # equal brackets check
         if left_parenthesis_counter != right_parenthesis_counter:

@@ -137,6 +137,26 @@ class InvalidUnaryMinusError(Exception):
     def get_invalid_char(self):
         return self._invalid_char
 
+class InvalidMinusError(Exception):
+    def __init__(self, invalid_char):
+        self._invalid_char = invalid_char
+
+    def __str__(self):
+        return "Invalid Minus Error: Minus cannot be applied to '%s'. It must appear before a digit, '(', '-' or '~' ." % self._invalid_char
+
+    def get_invalid_char(self):
+        return self._invalid_char
+
+class InvalidSignMinusError(Exception):
+    def __init__(self, invalid_char):
+        self._invalid_char = invalid_char
+
+    def __str__(self):
+        return "Invalid Sign Minus Error: Sign minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'." % self._invalid_char
+
+    def get_invalid_char(self):
+        return self._invalid_char
+
 
 class TildeAfterInvalidError(Exception):
     def __init__(self, prev_char):
@@ -176,7 +196,7 @@ class InvalidLastCharError(Exception):
         self._last_char = last_char
 
     def __str__(self):
-        return "Invalid Last Char Error: The last character '%s' is invalid. The last character must be a digit, '!', or ')'" % self._last_char
+        return "Invalid Last Char Error: The last character '%s' is invalid. The last character must be a digit, '!', '#' or ')'" % self._last_char
 
     def get_last_char(self):
         return self._last_char
