@@ -48,8 +48,12 @@ class Power(BinaryOperator):
             raise ZeroPowerZeroError()
         if operand1 < 0 and not isinstance(operand2, int) and not operand2.is_integer(): # float power on a negative value is undefined
             raise FractionPowerArgumentError(operand1, operand2)
-        return pow(operand1, operand2)
-
+        try:
+            result = pow(float(operand1), float(operand2))
+        except OverflowError:
+            raise OverflowError("Overflow Error: %s^%s is to long to be calculated" % (operand1, operand2))
+        else:
+            return result
 
 class Modulo(BinaryOperator):
     def calculate(self, operand1, operand2):
@@ -89,14 +93,16 @@ class Tilde(UnaryOperator):
 
 class Factorial(UnaryOperator):
     def calculate(self, operand):
-        factorial_sum = 1
+        factorial_sum = 1.0
         if not isinstance(operand, int) and operand.is_integer():
             operand = int(operand)
         if not isinstance(operand, int) or operand < 0:
             raise FactorialArgumentError(operand)
         else:
             for i in range(1, operand + 1):
-                factorial_sum *= i
+                factorial_sum *= float(i)
+                if factorial_sum == float('inf'):
+                    raise OverflowError("Overflow Error: %s! is to long to be calculated" %operand)
         return factorial_sum
 
 class Hashtag(UnaryOperator):
