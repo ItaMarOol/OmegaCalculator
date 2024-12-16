@@ -15,9 +15,6 @@ class ValidationChecker:
         ops_placements = OperatorsPlacements()
         left_parenthesis_counter = 0
         right_parenthesis_counter = 0
-        sign_minus_flag = 0
-        unary_minus_flag = 0
-        minus_flag = 0
         dot_flag = 0
 
         # removing white spaces
@@ -65,7 +62,7 @@ class ValidationChecker:
                 right_parenthesis_counter += 1
 
             if char == ".":
-                dot_flag = 1
+                dot_flag += 1
             # 2 dots in a row
             if dot_flag > 1:
                 raise SequenceError(char,char)
@@ -93,6 +90,7 @@ class ValidationChecker:
             if index > 0 and ops_placements.get_placement(char) == ops_placements.get_placement(expression[index-1]) and not (
                 char.isdigit()
                 or char == "-"
+                or char == "."
                 or ops_placements.get_placement(char) == "Right"
                 or char == "("
                 or char == ")"

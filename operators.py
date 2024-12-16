@@ -38,7 +38,9 @@ class Multiplication(BinaryOperator):
 class Division(BinaryOperator):
     def calculate(self, operand1, operand2):
         if operand2 == 0:
-            raise ZeroDivisionError("Zero Division Error: Division '%s' by 0 is undefined." % operand1)
+            raise ZeroDivisionError(
+                "Zero Division Error: Division '%s' by 0 is undefined." % operand1
+            )
         return float(operand1) / operand2
 
 
@@ -46,19 +48,27 @@ class Power(BinaryOperator):
     def calculate(self, operand1, operand2):
         if operand1 == operand2 == 0:
             raise ZeroPowerZeroError()
-        if operand1 < 0 and not isinstance(operand2, int) and not operand2.is_integer(): # float power on a negative value is undefined
+        if (
+            operand1 < 0 and not isinstance(operand2, int) and not operand2.is_integer()
+        ):  # float power on a negative value is undefined
             raise FractionPowerArgumentError(operand1, operand2)
         try:
             result = pow(float(operand1), float(operand2))
         except OverflowError:
-            raise OverflowError("Overflow Error: %s^%s is to long to be calculated" % (operand1, operand2))
+            raise OverflowError(
+                "Overflow Error: %s^%s is to long to be calculated"
+                % (operand1, operand2)
+            )
         else:
             return result
+
 
 class Modulo(BinaryOperator):
     def calculate(self, operand1, operand2):
         if operand2 == 0:
-            raise ZeroDivisionError("Zero Modulo Error: Modulo '%s' by 0 is undefined." % operand1)
+            raise ZeroDivisionError(
+                "Zero Modulo Error: Modulo '%s' by 0 is undefined." % operand1
+            )
         return operand1 % operand2
 
 
@@ -101,9 +111,12 @@ class Factorial(UnaryOperator):
         else:
             for i in range(1, operand + 1):
                 factorial_sum *= float(i)
-                if factorial_sum == float('inf'):
-                    raise OverflowError("Overflow Error: %s! is to long to be calculated" %operand)
+                if factorial_sum == float("inf"):
+                    raise OverflowError(
+                        "Overflow Error: %s! is to long to be calculated" % operand
+                    )
         return factorial_sum
+
 
 class Hashtag(UnaryOperator):
     def calculate(self, operand):
@@ -113,10 +126,11 @@ class Hashtag(UnaryOperator):
         if operand < 0:
             raise HashtagArgumentError(operand)
         else:
-            for digit in (str(operand)):
+            for digit in str(operand):
                 if digit != ".":
                     hashtag_sum += int(digit)
         return hashtag_sum
+
 
 class SignMinus(UnaryOperator):
     def calculate(self, operand):
