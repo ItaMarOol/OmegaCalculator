@@ -6,13 +6,11 @@ class InfixToPostfixConverter:
     def __init__(self):
         pass
 
-    def to_postfix(self, str_expression):
+    def to_postfix(self, expression: list) -> list:
         postfix_output = []
         stack = []
         ops_priorities = OperatorsPriorities()
         ops_placements = OperatorsPlacements()
-        minus_manager = MinusManager()
-        expression = minus_manager.manage(str_expression)
 
         index = 0
         while index < len(expression):

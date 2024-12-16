@@ -3,8 +3,7 @@ from calculator import Calculator
 calc = Calculator()
 exp = ""
 while exp != "omega>sigit":
-    print("Enter expression: (to finish enter 'omega>sigit')")
-    exp = input()
+    exp = input("Enter expression (to finish enter 'omega>sigit'): ")
     if exp == "omega>sigit":
         break
     else:
