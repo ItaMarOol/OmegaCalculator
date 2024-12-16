@@ -7,7 +7,7 @@ class PostfixEvaluator:
     def __init__(self):
         pass
 
-    def evaluate(self, postfix_list : list):
+    def evaluate(self, postfix_list: list):
         op_classes_dict = OperatorsClasses()
         stack = []
         result = 0
@@ -47,6 +47,3 @@ class PostfixEvaluator:
         if len(stack) > 1:
             raise MissingOperatorError()
         return stack[-1]
-
-
-

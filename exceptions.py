@@ -1,10 +1,12 @@
-
 class FactorialArgumentError(Exception):
     def __init__(self, argument):
         self._argument = argument
 
     def __str__(self):
-        return "Factorial Error: Factorial on a non positive-integer '%s' is undefined." % self._argument
+        return (
+            "Factorial Error: Factorial on a non positive-integer '%s' is undefined."
+            % self._argument
+        )
 
     def get_argument(self):
         return self._argument
@@ -15,7 +17,10 @@ class HashtagArgumentError(Exception):
         self._argument = argument
 
     def __str__(self):
-        return "Hashtag Error: Hashtag on a negative value '%s' is undefined." % self._argument
+        return (
+            "Hashtag Error: Hashtag on a negative value '%s' is undefined."
+            % self._argument
+        )
 
     def get_argument(self):
         return self._argument
@@ -27,13 +32,17 @@ class FractionPowerArgumentError(Exception):
         self._power = power
 
     def __str__(self):
-        return "Fraction Power Error: Fraction power '%s' on a negative base '%s' is undefined." % (self._power, self._base)
+        return (
+            "Fraction Power Error: Fraction power '%s' on a negative base '%s' is undefined."
+            % (self._power, self._base)
+        )
 
     def get_base(self):
         return self._base
 
     def get_power(self):
         return self._power
+
 
 class ZeroPowerZeroError(Exception):
     def __init__(self):
@@ -43,13 +52,15 @@ class ZeroPowerZeroError(Exception):
         return "Zero Power Error: Zero power '0' on a zero base '0' is undefined."
 
 
-
 class MissingOperandError(Exception):
     def __init__(self, operator):
         self._operator = operator
 
     def __str__(self):
-        return "Missing Operand Error: You need two numbers to operate '%s'." % self._operator
+        return (
+            "Missing Operand Error: You need two numbers to operate '%s'."
+            % self._operator
+        )
 
     def get_operator(self):
         return self._operator
@@ -63,15 +74,15 @@ class MissingOperatorError(Exception):
         return "Missing Operator Error: There are missing operators between the expression values."
 
 
-
-
-
 class FirstCharError(Exception):
     def __init__(self, first_char):
         self._first_char = first_char
 
     def __str__(self):
-        return "First Char Error: The first character '%s' is not valid. It must be a digit, '(' , '-' , or '~'." % self._first_char
+        return (
+            "First Char Error: The first character '%s' is not valid. It must be a digit, '(' , '-' , or '~'."
+            % self._first_char
+        )
 
     def get_first_char(self):
         return self._first_char
@@ -91,8 +102,11 @@ class SequenceError(Exception):
         self._second_char = second_char
 
     def __str__(self):
-        return ("Sequence Error: The sequence '%s' '%s' is not valid. "
-                "Operators and dots cannot appear in a sequence, except for: parentheses, minuses and right unary operators" % (self._first_char, self._second_char))
+        return (
+            "Sequence Error: The sequence '%s' '%s' is not valid. "
+            "Operators and dots cannot appear in a sequence, except for: parentheses, minuses and right unary operators"
+            % (self._first_char, self._second_char)
+        )
 
     def get_first_char(self):
         return self._first_char
@@ -106,7 +120,10 @@ class DotPlacementError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Dot Placement Error: A dot cannot appear before or after '%s'. It should only appear before a value or after a value/operator or '(' ." % self._invalid_char
+        return (
+            "Dot Placement Error: A dot cannot appear before or after '%s'. It should only appear before a value or after a value/operator or '(' ."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -117,7 +134,10 @@ class SurroundingDotsError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Surrounding Dots Error: A value '%s' cannot be surrounded by two dots. Dots should only appear before or after a value." % self._invalid_char
+        return (
+            "Surrounding Dots Error: A value '%s' cannot be surrounded by two dots. Dots should only appear before or after a value."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -128,7 +148,10 @@ class InvalidCharError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Char Error: The character '%s' is invalid. Only digits, operators, parentheses, and dots are allowed." % self._invalid_char
+        return (
+            "Invalid Char Error: The character '%s' is invalid. Only digits, operators, parentheses, and dots are allowed."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -139,27 +162,38 @@ class InvalidUnaryMinusError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Unary Minus Error: Unary minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'." % self._invalid_char
+        return (
+            "Invalid Unary Minus Error: Unary minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
+
 
 class InvalidMinusError(Exception):
     def __init__(self, invalid_char):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Minus Error: Minus cannot be applied to '%s'. It must appear before a digit, '(', '-' or '~' ." % self._invalid_char
+        return (
+            "Invalid Minus Error: Minus cannot be applied to '%s'. It must appear before a digit, '(', '-' or '~' ."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
+
 
 class InvalidSignMinusError(Exception):
     def __init__(self, invalid_char):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Sign Minus Error: Sign minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'." % self._invalid_char
+        return (
+            "Invalid Sign Minus Error: Sign minus cannot be applied to '%s'. It must appear before a digit, '(', or '-'."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -170,7 +204,10 @@ class TildeAfterInvalidError(Exception):
         self._prev_char = prev_char
 
     def __str__(self):
-        return "Tilde After Invalid Error: '~' cannot follow '%s'. It must follow an operand, '(' or '-'." % self._prev_char
+        return (
+            "Tilde After Invalid Error: '~' cannot follow '%s'. It must follow an operand, '(' or '-'."
+            % self._prev_char
+        )
 
     def get_pprev_char(self):
         return self._prev_char
@@ -181,7 +218,10 @@ class TildeBeforeInvalidError(Exception):
         self._next_char = next_char
 
     def __str__(self):
-        return "Tilde Before Invalid Error: '~' cannot appear before a value with '%s'. It must appear before a digit, '-', or '('." % self._next_char
+        return (
+            "Tilde Before Invalid Error: '~' cannot appear before a value with '%s'. It must appear before a digit, '-', or '('."
+            % self._next_char
+        )
 
     def get_next_char(self):
         return self._next_char
@@ -192,7 +232,10 @@ class InvalidSingleCharError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Single Char Error: '%s' is a single invalid character. Only numbers can stand alone." % self._invalid_char
+        return (
+            "Invalid Single Char Error: '%s' is a single invalid character. Only numbers can stand alone."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -203,7 +246,10 @@ class InvalidLastCharError(Exception):
         self._last_char = last_char
 
     def __str__(self):
-        return "Invalid Last Char Error: The last character '%s' is invalid. The last character must be a digit, '!', '#' or ')'" % self._last_char
+        return (
+            "Invalid Last Char Error: The last character '%s' is invalid. The last character must be a digit, '!', '#' or ')'"
+            % self._last_char
+        )
 
     def get_last_char(self):
         return self._last_char
@@ -215,7 +261,10 @@ class MismatchedParenthesesError(Exception):
         self._close_parentheses = close_parentheses
 
     def __str__(self):
-        return "Mismatched Parentheses Error: There are %d opening parentheses '(' and %d closing parentheses ')'. They must be balanced." % (self._open_parentheses, self._close_parentheses)
+        return (
+            "Mismatched Parentheses Error: There are %d opening parentheses '(' and %d closing parentheses ')'. They must be balanced."
+            % (self._open_parentheses, self._close_parentheses)
+        )
 
     def get_open_parentheses_count(self):
         return self._open_parentheses
@@ -229,7 +278,10 @@ class InvalidCharAfterParenthesisError(Exception):
         self._invalid_char = invalid_char
 
     def __str__(self):
-        return "Invalid Char After Parenthesis Error: '%s' cannot follow '('. Only digits, '(' , `~` or '-' can follow '(' ." % self._invalid_char
+        return (
+            "Invalid Char After Parenthesis Error: '%s' cannot follow '('. Only digits, '(' , `~` or '-' can follow '(' ."
+            % self._invalid_char
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
@@ -241,7 +293,10 @@ class InvalidCharBeforeRightOperatorError(Exception):
         self._right_operator = right_operator
 
     def __str__(self):
-        return "Invalid Char Before Right Operator Error: '%s' cannot appear before '%s'. Only digits, '-' , or right unary operators can appear before right unary operators ." % (self._invalid_char, self._right_operator)
+        return (
+            "Invalid Char Before Right Operator Error: '%s' cannot appear before '%s'. Only digits, '-' , or right unary operators can appear before right unary operators ."
+            % (self._invalid_char, self._right_operator)
+        )
 
     def get_invalid_char(self):
         return self._invalid_char
