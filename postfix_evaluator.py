@@ -6,7 +6,7 @@ class PostfixEvaluator:
     def __init__(self):
         pass
 
-    def evaluate(self, postfix_list):
+    def evaluate(self, postfix_list : list):
         op_classes_dict = OperatorsClasses()
         stack = []
         result = 0
@@ -33,7 +33,10 @@ class PostfixEvaluator:
                             stack.append(result)
                     elif issubclass(op_class, UnaryOperator):
                         if len(stack) < 1:
-                            raise TooManyOperatorsError(char)
+                            if char == "u" or char == "s":
+                                raise TooManyOperatorsError("-")
+                            else:
+                                raise TooManyOperatorsError(char)
                         else:
                             operand = stack.pop()
                             result = op_class.calculate(op_class, operand)

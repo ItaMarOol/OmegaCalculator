@@ -5,7 +5,7 @@ class MinusManager:
     def __init__(self):
         pass
 
-    def manage(self, infix_expression):
+    def manage(self, infix_expression : str) -> list :
         ops_priorities = OperatorsPriorities()
         output = []
         index = 0
@@ -31,7 +31,7 @@ class MinusManager:
                         index += 1
             # sign minus check
             elif (infix_expression[index] == "-" and index > 0 and
-                  ops_priorities.get_priority(infix_expression[index-1] != -1)):
+                  ops_priorities.get_priority(infix_expression[index-1]) != -1):
                 while index < len(infix_expression) and infix_expression[index] == "-":
                     output.append("s")
                     index+=1
