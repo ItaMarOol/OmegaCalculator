@@ -26,9 +26,13 @@ class Main:
         if exp == "help me":
             showMenu()
         else:
-            result = calc.calculate(exp)
-            if isinstance(result, int) or isinstance(result, float):
-                print("Result:", result)
+            try:
+                result = calc.calculate(exp)
+            except Exception as e:
+                print(str(e))
             else:
-                print(result)
+                if isinstance(result, float) and result.is_integer() and "e" not in str(result):
+                    print("Result:", int(result))
+                else:
+                    print("Result:", result)
     print("exited from calculator")
