@@ -126,7 +126,7 @@ class Hashtag(UnaryOperator):
             )
         if operand.is_integer():
             operand = int(operand)
-        if not isinstance(operand, int) or operand < 0:
+        if operand < 0:
             raise HashtagArgumentError(operand)
         for digit in str(operand):
             if digit != ".":
