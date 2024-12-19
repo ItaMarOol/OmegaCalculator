@@ -1,4 +1,3 @@
-from minus_manager import MinusManager
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
