@@ -26,14 +26,14 @@ class HashtagArgumentError(Exception):
         return self._argument
 
 
-class FractionPowerArgumentError(Exception):
+class PowerByFractionError(Exception):
     def __init__(self, base, power):
         self._base = base
         self._power = power
 
     def __str__(self):
         return (
-            "Fraction Power Error: Fraction power '%s' on a negative base '%s' is undefined."
+            "Power By Fraction Error: Fraction power '%s' on a negative base '%s' is undefined."
             % (self._power, self._base)
         )
 
@@ -44,12 +44,21 @@ class FractionPowerArgumentError(Exception):
         return self._power
 
 
-class ZeroPowerZeroError(Exception):
-    def __init__(self):
-        pass
+class ZeroPowerError(Exception):
+    def __init__(self, power):
+        self._power = power
 
     def __str__(self):
-        return "Zero Power Error: Zero power '0' on a zero base '0' is undefined."
+        return (
+            "Zero Power Error: non-positive power '%s' on a zero base '0' is undefined."
+            % self._power
+        )
+
+    def get_base(self):
+        return 0
+
+    def get_power(self):
+        return self._power
 
 
 class MissingOperandError(Exception):
@@ -219,7 +228,7 @@ class TildeBeforeInvalidError(Exception):
 
     def __str__(self):
         return (
-            "Tilde Before Invalid Error: '~' cannot appear before a value with '%s'. It must appear before a digit, '-', or '('."
+            "Tilde Before Invalid Error: '~' cannot appear before a value/expression with '%s'. It must appear before a digit, '-', or '('."
             % self._next_char
         )
 
