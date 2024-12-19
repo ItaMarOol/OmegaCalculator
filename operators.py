@@ -46,18 +46,17 @@ class Division(BinaryOperator):
 
 class Power(BinaryOperator):
     def calculate(self, operand1, operand2):
-        if operand1 == operand2 == 0:
-            raise ZeroPowerZeroError()
+        if operand1 == 0 and operand2 <= 0:
+            raise ZeroPowerError(operand2)
         if (
-            operand1 < 0 and not isinstance(operand2, int) and not operand2.is_integer()
+            operand1 < 0 and not operand2.is_integer()
         ):  # float power on a negative value is undefined
-            raise FractionPowerArgumentError(operand1, operand2)
+            raise PowerByFractionError(operand1, operand2)
         try:
-            result = pow(float(operand1), float(operand2))
+            result = pow(operand1, operand2)
         except OverflowError:
             raise OverflowError(
-                "Overflow Error: %s^%s is to long to be calculated"
-                % (operand1, operand2)
+                "Overflow Error: Expression result is to long to be calculated"
             )
         else:
             return result
@@ -104,31 +103,34 @@ class Tilde(UnaryOperator):
 class Factorial(UnaryOperator):
     def calculate(self, operand):
         factorial_sum = 1.0
-        if not isinstance(operand, int) and operand.is_integer():
+        if operand.is_integer():
             operand = int(operand)
-        if not isinstance(operand, int) or operand < 0:
+        if operand < 0 or not isinstance(operand, int):
             raise FactorialArgumentError(operand)
-        else:
-            for i in range(1, operand + 1):
-                factorial_sum *= float(i)
-                if factorial_sum == float("inf"):
-                    raise OverflowError(
-                        "Overflow Error: %s! is to long to be calculated" % operand
-                    )
+        for i in range(1, operand + 1):
+            factorial_sum *= float(i)
+            if factorial_sum == float("inf"):
+                raise OverflowError(
+                    "Overflow Error: Expression result is to long to be calculated, factorial limit is '%s!'."
+                    % i
+                )
         return factorial_sum
 
 
 class Hashtag(UnaryOperator):
     def calculate(self, operand):
         hashtag_sum = 0
-        if not isinstance(operand, int) and operand.is_integer():
+        if "e" in str(operand):
+            raise OverflowError(
+                "Overflow Error: Expression result is to long to be calculated"
+            )
+        elif operand.is_integer():
             operand = int(operand)
-        if operand < 0:
+        elif not isinstance(operand, int) or operand < 0:
             raise HashtagArgumentError(operand)
-        else:
-            for digit in str(operand):
-                if digit != ".":
-                    hashtag_sum += int(digit)
+        for digit in str(operand):
+            if digit != ".":
+                hashtag_sum += int(digit)
         return hashtag_sum
 
 

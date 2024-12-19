@@ -14,13 +14,11 @@ class PostfixEvaluator:
         i = 0
         while i < len(postfix_list):
             char = postfix_list[i]
+            if char[0] == ".":
+                char = float(char)
 
             if op_classes_dict.get_class(char) == -1:
-                char = float(char)
-                if char.is_integer():
-                    stack.append(int(char))
-                else:
-                    stack.append(char)
+                stack.append(char)
             else:
                 op_class = op_classes_dict.get_class(char)
                 if op_class != -1:
@@ -28,9 +26,17 @@ class PostfixEvaluator:
                         if len(stack) < 2:
                             raise MissingOperandError(char)
                         else:
-                            operand2 = stack.pop()
-                            operand1 = stack.pop()
+                            operand2 = float(stack.pop())
+                            operand1 = float(stack.pop())
+                            if operand1 == float("inf") or operand2 == float("inf"):
+                                raise OverflowError(
+                                    "Overflow Error: Expression result is to long to be calculated"
+                                )
                             result = op_class.calculate(op_class, operand1, operand2)
+                            if result == float("inf"):
+                                raise OverflowError(
+                                    "Overflow Error: Expression result is to long to be calculated"
+                                )
                             stack.append(result)
                     elif issubclass(op_class, UnaryOperator):
                         if len(stack) < 1:
@@ -39,8 +45,16 @@ class PostfixEvaluator:
                             else:
                                 raise MissingOperandError(char)
                         else:
-                            operand = stack.pop()
+                            operand = float(stack.pop())
+                            if operand == float("inf"):
+                                raise OverflowError(
+                                    "Overflow Error: Expression result is to long to be calculated"
+                                )
                             result = op_class.calculate(op_class, operand)
+                            if result == float("inf"):
+                                raise OverflowError(
+                                    "Overflow Error: Expression result is to long to be calculated"
+                                )
                             stack.append(result)
 
             i += 1
