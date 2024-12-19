@@ -1,4 +1,5 @@
 from calculator import Calculator
+from exceptions import  *
 
 
 def showMenu():
@@ -28,8 +29,50 @@ class Main:
         else:
             try:
                 result = calc.calculate(exp)
-            except Exception as e:
-                print(str(e))
+            except FactorialArgumentError as e:
+                print(e)
+            except HashtagArgumentError as e:
+                print(e)
+            except PowerByFractionError as e:
+                print(e)
+            except ZeroPowerError as e:
+                print(e)
+            except MissingOperandError as e:
+                print(e)
+            except MissingOperatorError as e:
+                print(e)
+            except InvalidFirstCharError as e:
+                print(e)
+            except EmptyExpressionError as e:
+                print(e)
+            except InvalidSequenceError as e:
+                print(e)
+            except DotPlacementError as e:
+                print(e)
+            except SurroundingDotsError as e:
+                print(e)
+            except InvalidCharError as e:
+                print(e)
+            except InvalidUnaryMinusError as e:
+                print(e)
+            except InvalidMinusError as e:
+                print(e)
+            except InvalidSignMinusError as e:
+                print(e)
+            except TildeAfterInvalidError as e:
+                print(e)
+            except TildeBeforeInvalidError as e:
+                print(e)
+            except InvalidSingleCharError as e:
+                print(e)
+            except InvalidLastCharError as e:
+                print(e)
+            except MismatchedParenthesesError as e:
+                print(e)
+            except InvalidCharAfterParenthesisError as e:
+                print(e)
+            except InvalidCharBeforeRightOperatorError as e:
+                print(e)
             else:
                 if isinstance(result, float) and result.is_integer() and "e" not in str(result):
                     print("Result:", int(result))
