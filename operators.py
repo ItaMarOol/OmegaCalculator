@@ -124,9 +124,9 @@ class Hashtag(UnaryOperator):
             raise OverflowError(
                 "Overflow Error: Expression result is to long to be calculated"
             )
-        elif operand.is_integer():
+        if operand.is_integer():
             operand = int(operand)
-        elif not isinstance(operand, int) or operand < 0:
+        if not isinstance(operand, int) or operand < 0:
             raise HashtagArgumentError(operand)
         for digit in str(operand):
             if digit != ".":
