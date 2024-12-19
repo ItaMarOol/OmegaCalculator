@@ -1,4 +1,4 @@
-from exceptions import EmptyExpressionError, FirstCharError, InvalidCharError, SequenceError, DotPlacementError, \
+from exceptions import EmptyExpressionError, InvalidFirstCharError, InvalidCharError, InvalidSequenceError, DotPlacementError, \
     InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
     InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError, InvalidSignMinusError, InvalidMinusError, \
     InvalidCharAfterParenthesisError, InvalidCharBeforeRightOperatorError
@@ -35,7 +35,7 @@ class ValidationChecker:
                 or char == "."
             )
         ):
-            raise FirstCharError(char)
+            raise InvalidFirstCharError(char)
 
         # Invalid last char check
         if not (
@@ -65,7 +65,7 @@ class ValidationChecker:
                 dot_flag += 1
             # 2 dots in a row
             if dot_flag > 1:
-                raise SequenceError(char,char)
+                raise InvalidSequenceError(char,char)
 
             # dot before operator
             if ops_priorities.get_priority(char) != -1 and dot_flag == 1:
@@ -95,30 +95,32 @@ class ValidationChecker:
                 or char == "("
                 or char == ")"
             ):
-                raise SequenceError(expression[index-1],char)
+                raise InvalidSequenceError(expression[index-1],char)
 
             # minus check
             if char == "-":
                 if index == 0 or expression[index-1] == "(":
                     unary_minus_flag = 1
-                elif expression[index-1].isdigit() or expression[index-1] == ")":
-                    minus_flag = 1
-                elif ops_priorities.get_priority(expression[index-1]) != -1:
+                elif ops_priorities.get_priority(expression[index-1]) != -1 and ops_placements.get_placement(expression[index-1]) != "Right":
                     sign_minus_flag = 1
+                else:
+                    minus_flag = 1
 
                 if index + 1 < len(expression):
                     while index + 1 < len(expression) and expression[index+1] == "-":
                         index += 1
-                        sign_minus_flag = 1
+                        if unary_minus_flag == 0: # not unary minus sequence
+                            sign_minus_flag = 1
                     if not (
-                            expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "("
+                            expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "(" or expression[index + 1] == "."
                     ):
                         if sign_minus_flag == 1:
                             raise InvalidSignMinusError(expression[index+1])
                         elif unary_minus_flag == 1:
                             raise InvalidUnaryMinusError(expression[index+1])
                         else:
-                            raise InvalidMinusError(expression[index+1])
+                            if expression[index+1] != "~":
+                                raise InvalidMinusError(expression[index+1])
                 else:
                     raise InvalidSingleCharError(char)
 
@@ -137,7 +139,7 @@ class ValidationChecker:
                     raise InvalidLastCharError(char)
             if char.isdigit():
                 dot_flag = 0
-            if index > 0 and expression[index-1] == "(" and not(char.isdigit() or char == "-" or char == "." or ops_placements.get_placement(char) == "Left"):
+            if index > 0 and expression[index-1] == "("  and not (char.isdigit() or char == "(" or char == "-" or char == "." or ops_placements.get_placement(char) == "Left"):
                 raise InvalidCharAfterParenthesisError(char)
             if index > 0 and ops_placements.get_placement(char) == "Right":
                 if not (expression[index-1].isdigit() or expression[index-1] == ")" or ops_placements.get_placement(expression[index-1]) == "Right" or expression[index-1] == "-"):
