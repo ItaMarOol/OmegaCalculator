@@ -83,7 +83,7 @@ class MissingOperatorError(Exception):
         return "Missing Operator Error: There are missing operators between the expression values."
 
 
-class FirstCharError(Exception):
+class InvalidFirstCharError(Exception):
     def __init__(self, first_char):
         self._first_char = first_char
 
@@ -105,7 +105,7 @@ class EmptyExpressionError(Exception):
         return "Empty Expression Error: The expression is empty."
 
 
-class SequenceError(Exception):
+class InvalidSequenceError(Exception):
     def __init__(self, first_char, second_char):
         self._first_char = first_char
         self._second_char = second_char
