@@ -12,17 +12,8 @@ class Calculator:
         self.postfix_calculator = PostfixEvaluator()
 
     def calculate(self, expression):
-        try:
-            self.valid_checker.is_valid_expression_check(expression)
-        except Exception as e:
-            return str(e)
-
-        else:
-            expression = self.minusManager.manage(expression)
-            postfix_expression = self.postfix_converter.to_postfix(expression)
-            try:
-                result = self.postfix_calculator.evaluate(postfix_expression)
-            except Exception as e:
-                return str(e)
-            else:
-                return result
+        self.valid_checker.is_valid_expression_check(expression)
+        expression = self.minusManager.manage(expression)
+        postfix_expression = self.postfix_converter.to_postfix(expression)
+        result = self.postfix_calculator.evaluate(postfix_expression)
+        return result
