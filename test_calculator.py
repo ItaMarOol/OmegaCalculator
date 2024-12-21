@@ -10,6 +10,19 @@ def test_invalid_factorial_expression():
     with pytest.raises(FactorialArgumentError):
         calculator.calculate("2--3!")
 
+def test_invalid_hashtag_expression():
+    with pytest.raises(HashtagArgumentError):
+        calculator.calculate("(-123)#")
+
+def test_power_by_fraction_expression():
+    with pytest.raises(PowerByFractionError):
+        calculator.calculate("(-2)^0.5")
+
+
+def test_zero_power_expression():
+    with pytest.raises(ZeroPowerError):
+        calculator.calculate("0^0")
+
 
 def test_invalid_operators_sequence_expression():
     with pytest.raises(InvalidSequenceError):
@@ -26,9 +39,59 @@ def test_divide_by_zero_expression():
         calculator.calculate("5/0")
 
 
+def test_missing_operand_expression():
+    with pytest.raises(MissingOperandError):
+        calculator.calculate("(5*)")
+
+
 def test_missing_operator_expression():
     with pytest.raises(MissingOperatorError):
         calculator.calculate("4(~5)")
+
+
+def test_invalid_dot_placement_expression():
+    with pytest.raises(DotPlacementError):
+        calculator.calculate("5.+2")
+
+
+def test_invalid_surrounding_dots_expression():
+    with pytest.raises(SurroundingDotsError):
+        calculator.calculate("5.25.5")
+
+
+def test_invalid_unary_minus_expression():
+    with pytest.raises(InvalidUnaryMinusError):
+        calculator.calculate("--+5")
+
+
+def test_invalid_binary_minus_expression():
+    with pytest.raises(InvalidBinaryMinusError):
+        calculator.calculate("(9-)5")
+
+
+def test_invalid_sign_minus_expression():
+    with pytest.raises(InvalidSignMinusError):
+        calculator.calculate("5+-~5")
+
+
+def test_tilde_before_invalid_char_expression():
+    with pytest.raises(TildeBeforeInvalidError):
+        calculator.calculate("9-~+5")
+
+
+def test_tilde_after_invalid_char_expression():
+    with pytest.raises(TildeAfterInvalidError):
+        calculator.calculate("9~-5")
+
+
+def test_invalid_char_after_parenthesis_expression():
+    with pytest.raises(InvalidCharAfterParenthesisError):
+        calculator.calculate("()+5")
+
+
+def test_invalid_char_before_right_operator_expression():
+    with pytest.raises(InvalidCharBeforeRightOperatorError):
+        calculator.calculate("5+!")
 
 
 def test_empty_expression():
@@ -48,6 +111,9 @@ def test_gibberish_expression():
         calculator.calculate("09n32pv7ywvetpm   2t]")
     with pytest.raises(InvalidCharError):
         calculator.calculate("0;sligdhmv;aowijoptwa6")
+
+
+
 
 
 def test_simple_addition_expression():
