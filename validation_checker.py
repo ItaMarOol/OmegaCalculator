@@ -1,15 +1,33 @@
-from exceptions import EmptyExpressionError, InvalidFirstCharError, InvalidCharError, InvalidSequenceError, DotPlacementError, \
-    InvalidSingleCharError, InvalidUnaryMinusError, TildeBeforeInvalidError, TildeAfterInvalidError, \
-    InvalidLastCharError, MismatchedParenthesesError, SurroundingDotsError, InvalidSignMinusError, InvalidMinusError, \
-    InvalidCharAfterParenthesisError, InvalidCharBeforeRightOperatorError
+"""This module handling the initial mathematical-expression validation check."""
+from exceptions import (
+    EmptyExpressionError,
+    InvalidFirstCharError,
+    InvalidCharError,
+    InvalidSequenceError,
+    DotPlacementError,
+    InvalidSingleCharError,
+    InvalidUnaryMinusError,
+    TildeBeforeInvalidError,
+    TildeAfterInvalidError,
+    InvalidLastCharError,
+    MismatchedParenthesesError,
+    SurroundingDotsError,
+    InvalidSignMinusError,
+    InvalidBinaryMinusError,
+    InvalidCharAfterParenthesisError,
+    InvalidCharBeforeRightOperatorError,
+)
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
 class ValidationChecker:
+    """This class responsible for validating mathematical expressions."""
+
     def __init__(self):
         pass
 
-    def is_valid_expression_check(self, infix_str_expression : str):
+    def is_valid_expression_check(self, infix_str_expression: str) -> bool:
+        """Checks if the given infix expression is valid."""
 
         ops_priorities = OperatorsPriorities()
         ops_placements = OperatorsPlacements()
@@ -18,7 +36,7 @@ class ValidationChecker:
         dot_flag = 0
 
         # removing white spaces
-        expression = infix_str_expression.replace(" ", "").replace("\t","")
+        expression = infix_str_expression.replace(" ", "").replace("\t", "")
 
         # empty input check
         if expression == "":
@@ -26,14 +44,8 @@ class ValidationChecker:
 
         char = expression[0]
         # invalid first char check
-        if (
-            not (
-                char.isdigit()
-                or char == "("
-                or char == "-"
-                or char == "~"
-                or char == "."
-            )
+        if not (
+            char.isdigit() or char == "(" or char == "-" or char == "~" or char == "."
         ):
             raise InvalidFirstCharError(char)
 
@@ -45,17 +57,22 @@ class ValidationChecker:
         ):
             raise InvalidLastCharError(expression[-1])
 
-        for index in range(len(expression)):
-            char = expression[index]
+        for index, char in enumerate(expression): # for loop when char = expression[index].
             sign_minus_flag = 0
             unary_minus_flag = 0
             minus_flag = 0
 
             # invalid char check
-            if not (char.isdigit() or ops_priorities.get_priority(char) != -1 or char == "(" or char == ")" or char == "."):
+            if not (
+                char.isdigit()
+                or char in ops_priorities.priorities_dict
+                or char == "("
+                or char == ")"
+                or char == "."
+            ):
                 raise InvalidCharError(char)
 
-
+            # parenthesis counters
             if char == "(":
                 left_parenthesis_counter += 1
             if char == ")":
@@ -63,90 +80,133 @@ class ValidationChecker:
 
             if char == ".":
                 dot_flag += 1
+
             # 2 dots in a row
             if dot_flag > 1:
-                raise InvalidSequenceError(char,char)
+                raise InvalidSequenceError(char, char)
 
             # dot before operator
-            if ops_priorities.get_priority(char) != -1 and dot_flag == 1:
+            if char in ops_priorities.priorities_dict and dot_flag == 1:
                 raise DotPlacementError(char)
 
             # dot after ')'
-            if expression[index-1] == ")" and dot_flag == 1:
-                raise DotPlacementError(expression[index-1])
+            if expression[index - 1] == ")" and dot_flag == 1:
+                raise DotPlacementError(expression[index - 1])
 
             # dot before and after a digit
             num = char
-            while index + 1 < len(expression) and char.isdigit() and dot_flag == 1 :
-                if expression[index+1] == ".":
+            while index + 1 < len(expression) and char.isdigit() and dot_flag == 1:
+                if expression[index + 1] == ".":
                     raise SurroundingDotsError(num)
-                elif ops_priorities.get_priority(expression[index+1]) != -1:
+                if expression[index + 1] in ops_priorities.priorities_dict:
                     dot_flag = 0
                 else:
                     index += 1
                     num += expression[index]
 
             # 2 operators in a row ( except '-','!','#','(',')' )
-            if index > 0 and ops_placements.get_placement(char) == ops_placements.get_placement(expression[index-1]) and not (
-                char.isdigit()
-                or char == "-"
-                or char == "."
-                or ops_placements.get_placement(char) == "Right"
-                or char == "("
-                or char == ")"
+            if (
+                index > 0
+                and ops_placements.get_placement(char)
+                == ops_placements.get_placement(expression[index - 1])
+                and not (
+                    char.isdigit()
+                    or char == "-"
+                    or char == "."
+                    or ops_placements.get_placement(char) == "Right"
+                    or char == "("
+                    or char == ")"
+                )
             ):
-                raise InvalidSequenceError(expression[index-1],char)
+                raise InvalidSequenceError(expression[index - 1], char)
 
             # minus check
             if char == "-":
-                if index == 0 or expression[index-1] == "(":
+                if index == 0 or expression[index - 1] == "(":
                     unary_minus_flag = 1
-                elif ops_priorities.get_priority(expression[index-1]) != -1 and ops_placements.get_placement(expression[index-1]) != "Right":
+                elif (
+                    expression[index - 1] in ops_priorities.priorities_dict
+                    and ops_placements.get_placement(expression[index - 1]) != "Right"
+                ):
                     sign_minus_flag = 1
                 else:
                     minus_flag = 1
 
                 if index + 1 < len(expression):
-                    while index + 1 < len(expression) and expression[index+1] == "-":
+                    while index + 1 < len(expression) and expression[index + 1] == "-":
                         index += 1
-                        if unary_minus_flag == 0: # not unary minus sequence
+                        if unary_minus_flag == 0:  # not unary minus sequence
                             sign_minus_flag = 1
                     if not (
-                            expression[index + 1].isdigit() or  expression[index + 1] == "-" or  expression[index + 1] == "(" or expression[index + 1] == "."
-                    ):
+                        expression[index + 1].isdigit()
+                        or expression[index + 1] == "-"
+                        or expression[index + 1] == "("
+                        or expression[index + 1] == "."
+                    ):  # invalid char after a minus
+
                         if sign_minus_flag == 1:
-                            raise InvalidSignMinusError(expression[index+1])
-                        elif unary_minus_flag == 1:
-                            raise InvalidUnaryMinusError(expression[index+1])
-                        else:
-                            if expression[index+1] != "~":
-                                raise InvalidMinusError(expression[index+1])
+                            raise InvalidSignMinusError(expression[index + 1])
+                        if unary_minus_flag == 1:
+                            raise InvalidUnaryMinusError(expression[index + 1])
+                        if (
+                            expression[index + 1] != "~"
+                        ):  # tilde after a minus is valid only after a binary minus
+                            raise InvalidBinaryMinusError(expression[index + 1])
                 else:
                     raise InvalidSingleCharError(char)
 
             # tilda check
             if char == "~":
                 # before tilde a value check
-                if index > 0 and expression[index-1].isdigit():
-                    raise TildeAfterInvalidError(expression[index-1])
+                if index > 0 and expression[index - 1].isdigit():
+                    raise TildeAfterInvalidError(expression[index - 1])
                 if index + 1 < len(expression):
                     index += 1
-                    while index < len(expression) and not (expression[index].isdigit() or expression[index] == "("):
-                        if ops_priorities.get_priority(expression[index]) != -1 and expression[index] != "-":
+                    while index < len(expression) and not (
+                        expression[index].isdigit() or expression[index] == "("
+                    ):
+                        if (
+                            expression[index] in ops_priorities.priorities_dict
+                            and expression[index] != "-"
+                        ):  # check if after a tilde there is an invalid char (every operator except for minus)
                             raise TildeBeforeInvalidError(expression[index])
                         index += 1
-                else:
+                else:  # tilde is the last char in the expression
                     raise InvalidLastCharError(char)
+
+            # dot flag resetting when a digit appears
             if char.isdigit():
                 dot_flag = 0
-            if index > 0 and expression[index-1] == "("  and not (char.isdigit() or char == "(" or char == "-" or char == "." or ops_placements.get_placement(char) == "Left"):
+
+            # valid char after parenthesis check
+            if (
+                index > 0
+                and expression[index - 1] == "("
+                and not (
+                    char.isdigit()
+                    or char == "("
+                    or char == "-"
+                    or char == "."
+                    or ops_placements.get_placement(char) == "Left"
+                )
+            ):
                 raise InvalidCharAfterParenthesisError(char)
+
+            # valid char before right unary operator check
             if index > 0 and ops_placements.get_placement(char) == "Right":
-                if not (expression[index-1].isdigit() or expression[index-1] == ")" or ops_placements.get_placement(expression[index-1]) == "Right" or expression[index-1] == "-"):
-                    raise InvalidCharBeforeRightOperatorError(expression[index-1], char)
+                if not (
+                    expression[index - 1].isdigit()
+                    or expression[index - 1] == ")"
+                    or ops_placements.get_placement(expression[index - 1]) == "Right"
+                    or expression[index - 1] == "-"
+                ):
+                    raise InvalidCharBeforeRightOperatorError(
+                        expression[index - 1], char
+                    )
         # equal brackets check
         if left_parenthesis_counter != right_parenthesis_counter:
-            raise MismatchedParenthesesError(left_parenthesis_counter, right_parenthesis_counter)
+            raise MismatchedParenthesesError(
+                left_parenthesis_counter, right_parenthesis_counter
+            )
+
         return True
-
-

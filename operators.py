@@ -1,7 +1,9 @@
+"""This module includes the calculator operators classes. """
 from abc import ABC, abstractmethod
 from exceptions import *
 
 
+# binary operator marking interfaces
 class BinaryOperator(ABC):
     def __init__(self, operator):
         self.operator = operator
@@ -10,7 +12,7 @@ class BinaryOperator(ABC):
     def calculate(self, operand1, operand2):
         pass
 
-
+# unary operator marking interfaces
 class UnaryOperator(ABC):
     def __init__(self, operator):
         self.operator = operator
@@ -46,11 +48,13 @@ class Division(BinaryOperator):
 
 class Power(BinaryOperator):
     def calculate(self, operand1, operand2):
-        if operand1 == 0 and operand2 <= 0:
+        if (
+            operand1 == 0 and operand2 <= 0
+        ):  # non-positive power on a zero base is undefined
             raise ZeroPowerError(operand2)
         if (
             operand1 < 0 and not operand2.is_integer()
-        ):  # float power on a negative value is undefined
+        ):  # float power on a negative base is undefined
             raise PowerByFractionError(operand1, operand2)
         try:
             result = pow(operand1, operand2)
@@ -64,7 +68,7 @@ class Power(BinaryOperator):
 
 class Modulo(BinaryOperator):
     def calculate(self, operand1, operand2):
-        if operand2 == 0:
+        if operand2 == 0:  # division by zero
             raise ZeroDivisionError(
                 "Zero Modulo Error: Modulo '%s' by 0 is undefined." % operand1
             )
@@ -103,9 +107,11 @@ class Tilde(UnaryOperator):
 class Factorial(UnaryOperator):
     def calculate(self, operand):
         factorial_sum = 1.0
-        if operand.is_integer():
+        if operand.is_integer():  # check if float is an integer
             operand = int(operand)
-        if operand < 0 or not isinstance(operand, int):
+        if operand < 0 or not isinstance(
+            operand, int
+        ):  # factorial on a non-positive-integer is undefined.
             raise FactorialArgumentError(operand)
         for i in range(1, operand + 1):
             factorial_sum *= float(i)
@@ -124,9 +130,7 @@ class Hashtag(UnaryOperator):
             raise OverflowError(
                 "Overflow Error: Expression result is to long to be calculated"
             )
-        if operand.is_integer():
-            operand = int(operand)
-        if operand < 0:
+        if operand < 0:  # hashtag on a non-positive value is undefined.
             raise HashtagArgumentError(operand)
         for digit in str(operand):
             if digit != ".":
