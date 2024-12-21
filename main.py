@@ -1,8 +1,11 @@
+"""This module is the main module. This module gets the user input and returns the output (expression result or error).  """
+
 from calculator import Calculator
-from exceptions import  *
+from exceptions import *
 
 
-def showMenu():
+def show_menu():
+    # Display special operators and their descriptions
     print("Special operators dictionary:")
     print("'$' - maximum (example: 3$9 = 9)")
     print("'&' - minimum (example: 3$9 = 3)")
@@ -18,17 +21,19 @@ class Main:
     print(
         "Welcome the the Omega calculator! This calculator works as a regular calculator but has some special operators"
     )
-    showMenu()
-    while exp != "omega>sigit":
+    show_menu()
+    while exp != "omega>sigit":  # Exit condition
         print("\nTo finish enter 'omega>sigit', to get help enter 'help me'")
         exp = input("Enter expression: ")
         if exp == "omega>sigit":
-            break
+            break  # Exit the loop and calculator
         if exp == "help me":
-            showMenu()
+            show_menu()  # Show the menu if the user asks for help
         else:
             try:
                 result = calc.calculate(exp)
+            except ZeroDivisionError as e:
+                print(e)
             except FactorialArgumentError as e:
                 print(e)
             except HashtagArgumentError as e:
@@ -55,7 +60,7 @@ class Main:
                 print(e)
             except InvalidUnaryMinusError as e:
                 print(e)
-            except InvalidMinusError as e:
+            except InvalidBinaryMinusError as e:
                 print(e)
             except InvalidSignMinusError as e:
                 print(e)
@@ -74,7 +79,12 @@ class Main:
             except InvalidCharBeforeRightOperatorError as e:
                 print(e)
             else:
-                if isinstance(result, float) and result.is_integer() and "e" not in str(result):
+                # Format the result to int if it's float with .0
+                if (
+                    isinstance(result, float)
+                    and result.is_integer()
+                    and "e" not in str(result)
+                ):
                     print("Result:", int(result))
                 else:
                     print("Result:", result)

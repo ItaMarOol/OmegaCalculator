@@ -1,9 +1,12 @@
+"""This module includes the calculator operators dictionaries. """
 from operators import *
 
 
 class OperatorsPriorities:
+    """This class includes a dictionary with the calculator operators and their priorities."""
+
     def __init__(self):
-        self.operators_priorities = {
+        self.priorities_dict = {
             "+": 1,
             "-": 1,
             "*": 2,
@@ -21,12 +24,14 @@ class OperatorsPriorities:
         }
 
     def get_priority(self, operator: str):
-        return self.operators_priorities.get(operator, -1)
+        return self.priorities_dict.get(operator, -1)
 
 
 class OperatorsPlacements:
+    """This class includes a dictionary with the calculator operators and their placements."""
+
     def __init__(self):
-        self.operators_placements_dictionary = {
+        self.placements_dict = {
             "+": "Middle",
             "-": "Middle",
             "*": "Middle",
@@ -44,12 +49,14 @@ class OperatorsPlacements:
         }
 
     def get_placement(self, operator: str):
-        return self.operators_placements_dictionary.get(operator, -1)
+        return self.placements_dict.get(operator, -1)
 
 
 class OperatorsClasses:
+    """This class includes a dictionary with the calculator operators and their classes."""
+
     def __init__(self):
-        self.operators_classes_dictionary = {
+        self.classes_dict = {
             "+": Addition,
             "-": Subtraction,
             "*": Multiplication,
@@ -67,4 +74,4 @@ class OperatorsClasses:
         }
 
     def get_class(self, operator: str):
-        return self.operators_classes_dictionary.get(operator, -1)
+        return self.classes_dict.get(operator, -1)

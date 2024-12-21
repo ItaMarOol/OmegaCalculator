@@ -1,20 +1,30 @@
+"""This module handling the conversion from infix expression to postfix expression."""
 from operators_dicts import OperatorsPriorities, OperatorsPlacements
 
 
 class InfixToPostfixConverter:
+    """This class converts an infix expression to postfix expression."""
+
     def __init__(self):
         pass
 
     def to_postfix(self, expression: list) -> list:
+        """
+        This function converts an expression from infix to postfix.
+
+        :param expression: mathematical expression in infix order
+        :return: the mathematical expression in postfix order
+        """
         postfix_output = []
         stack = []
         ops_priorities = OperatorsPriorities()
         ops_placements = OperatorsPlacements()
-
         index = 0
+
         while index < len(expression):
             char = expression[index]
 
+            # handling number values
             if char.isdigit() or char.lstrip("-").isdigit() or char == ".":
                 number = char
                 while index + 1 < len(expression) and (
@@ -32,6 +42,7 @@ class InfixToPostfixConverter:
                     postfix_output.append(stack.pop())
                 stack.pop()
 
+            # handling operators order
             else:
                 while (
                     stack
@@ -48,11 +59,10 @@ class InfixToPostfixConverter:
                     )
                 ):
                     postfix_output.append(stack.pop())
+                if ops_placements.get_placement(char) == "Right":
+                    postfix_output.append(char)
                 else:
-                    if ops_placements.get_placement(char) == "Right":
-                        postfix_output.append(char)
-                    else:
-                        stack.append(char)
+                    stack.append(char)
 
             index += 1
 
