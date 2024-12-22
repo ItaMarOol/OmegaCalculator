@@ -26,8 +26,6 @@ class ValidationChecker:
     def __init__(self):
         self.ops_priorities = OperatorsPriorities()
         self.ops_placements = OperatorsPlacements()
-        self.left_parenthesis_counter = 0
-        self.right_parenthesis_counter = 0
 
     def is_valid_expression_check(self, infix_str_expression: str) -> bool:
         """
@@ -39,8 +37,6 @@ class ValidationChecker:
 
         # removing white spaces
         expression = infix_str_expression.replace(" ", "").replace("\t", "")
-        self.left_parenthesis_counter = 0
-        self.right_parenthesis_counter = 0
 
         self.initial_check(expression)
         self.minus_check(expression)
@@ -287,18 +283,21 @@ class ValidationChecker:
         :return: nothing if the expression is valid. else - raises an informative exception
         """
 
+        left_parenthesis_counter = 0
+        right_parenthesis_counter = 0
+
         for index, char in enumerate(
             expression
         ):  # for loop when char = expression[index]
 
             # parenthesis counters
             if char == "(":
-                self.left_parenthesis_counter += 1
+                left_parenthesis_counter += 1
             if char == ")":
-                self.right_parenthesis_counter += 1
+                right_parenthesis_counter += 1
 
         # equal brackets check
-        if self.left_parenthesis_counter != self.right_parenthesis_counter:
+        if left_parenthesis_counter != right_parenthesis_counter:
             raise MismatchedParenthesesError(
-                self.left_parenthesis_counter, self.right_parenthesis_counter
+                left_parenthesis_counter, right_parenthesis_counter
             )
