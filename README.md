@@ -12,9 +12,6 @@ This calculator operates like a regular calculator but has some special operator
 '@' - average (example: 3@9 = 6)
 
 
-'$' - maximum (example: 3$9 = 9)
-
-
 '~' - tilde/negative (example: ~5 = -5)
 
 
