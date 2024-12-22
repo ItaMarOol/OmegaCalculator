@@ -21,8 +21,8 @@ class Calculator:
         :param expression: mathematical expression
         :return: the mathematical expression result
         """
-        self.valid_checker.is_valid_expression_check(expression)
-        expression = self.minus_manager.manage(expression)
-        postfix_expression = self.postfix_converter.to_postfix(expression)
-        result = self.postfix_calculator.evaluate(postfix_expression)
+        self.valid_checker.is_valid_expression_check(expression) # validation check
+        expression = self.minus_manager.manage(expression) # minus management
+        postfix_expression = self.postfix_converter.to_postfix(expression) # infix to postfix conversion
+        result = self.postfix_calculator.evaluate(postfix_expression) # postfix evaluation
         return result
